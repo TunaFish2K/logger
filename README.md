@@ -2,7 +2,7 @@
 一个无用的日志记录器
 
 用法：
-```
+```python
 import logger,sys
 log=logger.Logger(pattern="[{time}/{type}]: {log}") # 格式字符串，包含'time','type','log'三项
 log.add_stream(sys.stdout) # 或者其他什么输出流
