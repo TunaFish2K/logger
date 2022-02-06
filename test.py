@@ -1,4 +1,4 @@
-import unittest,log,sys,os
+import unittest,log,sys,os,py_lambda
 
 class LoggerTestCase(unittest.TestCase):
     def setUp(self):
@@ -28,6 +28,27 @@ class LoggerTestCase(unittest.TestCase):
         self.assertTrue("test_file" in log)
         self.logger.remove_all_stream()
     
+    def test_favour(self):
+        _l=log.Logger("[{time}/{type}]: {log} ({f})")
+        _l["f"]="favour test"
+        _l.add_stream(self.test_file)
+        _l.log(log="test_favour")
+        with open("test.log","r") as f:
+            l=f.read()
+        self.assertTrue("test_favour (favour test)" in l)
+
+    def test_favour_func(self):
+        _l=log.Logger("[{time}/{type}]: {log} ({f})")
+        _l["f"]=py_lambda.main._def([],"""
+    return "func"    
+
+        """)
+        _l.add_stream(self.test_file)
+        _l.log(log="test_favour")
+        with open("test.log","r") as f:
+            l=f.read()
+        self.assertTrue("test_favour (func)" in l)
+
     def tearDown(self) -> None:
         self.test_file.close()
         os.remove("test.log")
